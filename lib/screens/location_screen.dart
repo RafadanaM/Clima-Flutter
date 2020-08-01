@@ -2,11 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
+  static const routeName = '/location';
+
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  int temperature;
+  int condition;
+  String cityName;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final weatherData = ModalRoute.of(context).settings.arguments;
+      updateUI(weatherData);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,5 +88,13 @@ class _LocationScreenState extends State<LocationScreen> {
         ),
       ),
     );
+  }
+
+  void updateUI(dynamic weatherData) {
+    double temp = weatherData['main']['temp'];
+    temperature = temp.toInt();
+    int condition = weatherData['weather'][0]['id'];
+    String city = weatherData['name'];
+    print(temperature);
   }
 }

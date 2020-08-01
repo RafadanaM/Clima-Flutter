@@ -1,3 +1,4 @@
+import 'package:clima/screens/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/screens/loading_screen.dart';
 
@@ -8,7 +9,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: LoadingScreen(),
+      initialRoute: LoadingScreen.routeName,
+      routes: {
+        LoadingScreen.routeName: (context) => LoadingScreen(),
+        LocationScreen.routeName: (context) => LocationScreen(),
+      },
     );
   }
 }
