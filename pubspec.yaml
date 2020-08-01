@@ -22,8 +22,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+
   assets:
   - images/
+  - auth/secrets.json
+
 
   fonts:
   - family: Spartan MB

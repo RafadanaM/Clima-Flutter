@@ -1,14 +1,16 @@
+import 'dart:convert';
+
 import 'package:clima/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/services/location.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'location_screen.dart';
 
-const apiKey = '2fe9f266c8378c562ccd837113d43c86';
-
 class LoadingScreen extends StatefulWidget {
   static const routeName = '/loading';
+
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -33,6 +35,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getLocationData() async {
+    //load api key
+    String data = await rootBundle.loadString('auth/secrets.json');
+    String apiKey = json.decode(data)['api_key'];
+
     Location location = Location();
     await location.getCurentLocation();
 

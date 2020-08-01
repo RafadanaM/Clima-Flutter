@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
+import 'package:clima/services/weather.dart';
 
 class LocationScreen extends StatefulWidget {
   static const routeName = '/location';
+  final _weatherData;
+
+  LocationScreen(this._weatherData);
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  int temperature;
-  int condition;
-  String cityName;
+  WeatherModel weatherModel = WeatherModel();
+  int _temperature;
+  String _weatherIcon;
+  String _cityName;
+  String _msg;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final weatherData = ModalRoute.of(context).settings.arguments;
-      updateUI(weatherData);
-    });
+    updateUI(widget._weatherData);
   }
 
   @override
@@ -65,11 +67,11 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '32°',
+                      '$_temperature°',
                       style: kTempTextStyle,
                     ),
                     Text(
-                      '☀️',
+                      _weatherIcon,
                       style: kConditionTextStyle,
                     ),
                   ],
@@ -78,7 +80,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in San Francisco!",
+                  '$_msg in $_cityName!',
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
@@ -90,11 +92,21 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 
+  /*
+  This method will update the properties needed to display by accessing JSON data
+  @param: dynamic weatherData, JSON data received to be processed
+  Note:
+  - Temperature received might be int/double. Cast to num then int
+  - weatherData['weather'][0]['id'] is the Id of the weather see: https://openweathermap.org/weather-conditions
+   */
+
   void updateUI(dynamic weatherData) {
-    double temp = weatherData['main']['temp'];
-    temperature = temp.toInt();
-    int condition = weatherData['weather'][0]['id'];
-    String city = weatherData['name'];
-    print(temperature);
+    setState(() {
+      _temperature = (weatherData['main']['temp'] as num).toInt();
+      _msg = weatherModel.getMessage(_temperature);
+      _weatherIcon =
+          weatherModel.getWeatherIcon(weatherData['weather'][0]['id']);
+      _cityName = weatherData['name'];
+    });
   }
 }

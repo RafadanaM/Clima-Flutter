@@ -8,12 +8,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
-      initialRoute: LoadingScreen.routeName,
-      routes: {
-        LoadingScreen.routeName: (context) => LoadingScreen(),
-        LocationScreen.routeName: (context) => LocationScreen(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case LocationScreen.routeName:
+            return MaterialPageRoute(
+              builder: (context) => LocationScreen(settings.arguments),
+              settings: settings,
+            );
+          default:
+            throw Exception('Unknown route');
+        }
       },
+      theme: ThemeData.dark(),
+      home: LoadingScreen(),
     );
   }
 }
